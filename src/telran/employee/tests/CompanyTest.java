@@ -10,6 +10,7 @@ import telran.employee.model.SalesManager;
 import telran.employee.model.WageEmployee;
 
 import java.io.ByteArrayOutputStream;
+import java.io.IOException;
 import java.io.OutputStream;
 import java.io.PrintStream;
 
@@ -47,6 +48,11 @@ class CompanyTest {
 
         assertNull(company.removeEmployee(123));
         assertEquals(company.removeEmployee(2000),firm[1]);
+        assertEquals(3,company.size());
+        assertNull(company.removeEmployee(2000));
+        assertEquals(3,company.size());
+
+
 
     }
 
@@ -74,18 +80,24 @@ class CompanyTest {
     }
 
     @Test
-    void printEmployees() {
+    void printEmployees() throws IOException {
         String expected = "Employee{id=1000, firstName='John', lastName='Smith', hours=180.0}\n" +
                 "Employee{id=2000, firstName='Mary', lastName='Smith', hours=180.0}\n" +
                 "Employee{id=3000, firstName='Peter', lastName='Jackson', hours=180.0}\n" +
                 "Employee{id=4000, firstName='Tigran', lastName='Petrosian', hours=90.0}\n";
         PrintStream consoleStream = System.out;
         OutputStream testStream = new ByteArrayOutputStream();
+        OutputStream testStream2 = new ByteArrayOutputStream();
         System.setOut(new PrintStream(testStream));
 
         company.printEmployees();
 
-        assertEquals(expected,testStream.toString());
+        assertEquals(expected, testStream.toString());
+
+        company.removeEmployee(2000);
+        System.setOut(new PrintStream(testStream2));
+        assertNotEquals(expected, testStream2.toString());
+
         System.setOut(consoleStream);
         return;
     }
